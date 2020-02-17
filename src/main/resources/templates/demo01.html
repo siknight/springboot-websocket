@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>websocket客户端</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+</head>
+<body>
+    <div id="message" style="border:1px red solid;width: 600px;height: 400px">
+
+    </div>
+    
+    <br/>
+    <input type="text" name="msgtext" id="msgtext"><br/>
+    <button onclick="send()">发送</button>
+
+    <script>
+        var webSocket = new WebSocket("ws://localhost:8087/server01/xiaosi");
+
+        webSocket.onopen = function () {
+            console.info("xiaosi客户端启动了");
+            $("#message").append("xiaosi客户端启动了<br/>");
+            // webSocket.send("xiaosi onopen 向服务器server01发送消息了");
+        }
+
+
+        webSocket.onclose = function () {
+            console.info("xiaosi客户端关闭了");
+            $("#message").append("xiaosi客户端关闭了<br/>");
+            // webSocket.send("xiaosi onclose向服务器server01发送消息了");
+        }
+
+        webSocket.error = function () {
+            $("#message").append("xiaosi客户端error了<br/>");
+            // webSocket.send("xiaosi error向服务器server01发送消息了");
+        }
+
+        webSocket.onmessage = function (ev) {
+            $("#message").append("收到来自服务端来自的消息="+ev.data+"<br/>");
+        }
+
+
+        function  send(){
+           var msgtext = $("#msgtext").val();
+            $("#message").append("xiaosi:"+msgtext+"<br/>");
+            webSocket.send("xiaosi:"+msgtext);
+        }
+
+
+    </script>
+
+</body>
+</html>

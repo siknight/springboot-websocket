@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>当前用户xiaoMing</title>
+    <style>
+        #message{
+            width: 50%;
+            height: 500px;
+            border: 1px solid black;
+            background-color: darkgray;
+
+        }
+
+        #inputVal{
+            width: 50%;
+        }
+        input{
+            width: 92%;
+        }
+    </style>
+</head>
+<body>
+    <h1>当前用户xiaoMing</h1>
+    <!--接收消息区-->
+    <div id="message">
+    </div>
+    <br/><br/>
+    <!--发送消息区-->
+    <div id="inputVal">
+        <input type="text" name="text">
+        <button onclick="send()">发送</button>
+    </div>
+
+<script>
+    //获取消息框
+    var messageEl=document.getElementById("message");
+    //获取消息输入框
+    var inputEl=document.getElementsByTagName("input")[0];
+
+    var websocket=null;
+    if('WebSocket' in window){
+        //建立和服务器的连接
+        websocket=new WebSocket("ws:localhost:8087/webSocket/xiaoMing");
+    }else {
+        alert("浏览器不支持");
+    }
+    //向消息框加入消息
+    function addMessage(message) {
+        messageEl.innerHTML+=message+"</br>";
+    }
+
+    websocket.onopen=function () {
+        console.log("webscoket已经连接成功");
+        addMessage("webscoket已经连接成功");
+    };
+
+    websocket.onclose=function () {
+        console.log("webscoket连接失败");
+        addMessage("webscoket连接失败");
+    };
+    //指定接收到服务器数据后的回调，可以在回调中通过参数.data获取到返回的数据。
+    websocket.onmessage=function (event) {
+        addMessage(event.data);
+    };
+    //异常时
+    websocket.onerror=function () {
+        console.log("webscoket连接失败");
+        addMessage("webscoket连接失败");
+    };
+    //发送消息
+    function send() {
+        websocket.send("xiaoMing:"+inputEl.value);
+        messageEl.innerHTML+="我:"+inputEl.value+"</br>";
+    }
+
+
+
+</script>
+
+
+
+
+
+
+
+</body>
+</html>
